@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>What Made You Happy Today</title>
+
     <style>
         body {
             display: grid;
@@ -36,12 +36,14 @@
             grid-area: emily;
             background: #FFD8AF;
             padding:1rem;
+            overflow-y: scroll;
         }
 
         #haiku {
             grid-area: haiku;
             background: #FFD8AF;
             padding:1rem;
+            overflow-y: scroll;
         }
 
         #population {
@@ -65,7 +67,7 @@
 
 
     </style>
-    <title>Document</title>
+    <title>What Made You Happy Today</title>
 </head>
 <body>
 <header id="population"></header>
@@ -74,7 +76,7 @@
 <div id="boinc">
     <iframe src="https://signature.statseb.fr/index.py?cpid=d03ca3319b7927dc86f01efb500567c8" ></iframe>
 </div>
-<div id="haiku">Haiku</div>
+<div id="haiku">Kobayashi Issa</div>
 
 <footer id="clock">
     <em>Woot!</em> You found whatmadeyouhappytoday just in time, it is now <em id="time">Time</em>
@@ -90,7 +92,7 @@
       const book = Object.keys(data)[randomValue(3)]
       const chapter = Object.keys(data[book])[randomValue(4)]
       const poem = Object.values(data[book][chapter])[randomValue(Object.values(data[book][chapter]).length)]
-      text = `<h2>Emily Poem</h2><h3>${book}<br><small>${chapter}</small></h3><p>${poem}</p>`
+      text = `<h2>Emily Dickinson</h2><h3>${book}<br><small>${chapter}</small></h3><p>${poem}</p>`
     }
     updateHTML(type,text)
 
