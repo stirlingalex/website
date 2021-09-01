@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        body {
+            display: grid;
+            grid-template-areas: 'population population population'
+    'emily boinc haiku'
+    'clock clock clock';
+            margin:0;
+            padding:0;
+            overflow: hidden;
+            grid-template-columns: 1fr 3fr 1fr;
+            grid-template-rows: 1fr 5fr 1fr;
+            min-height: 100vh;
+        }
+
+        #clock {
+            grid-area: clock;
+
+        }
+
+        #boinc {
+            grid-area: boinc;
+        }
+
+        #emily {
+            grid-area: emily;
+            background: #FFD8AF;
+            padding:1rem;
+        }
+
+        #haiku {
+            grid-area: haiku;
+            background: #FFD8AF;
+            padding:1rem;
+        }
+
+        #population {
+            grid-area: population;
+        }
+
+        iframe {
+            width: 100%;
+            height:100%;
+        }
+        header,footer {
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            background:#FE7B09;
+            color:white;
+            padding:1rem;
+        }
+
+
+    </style>
+    <title>Document</title>
+</head>
+<body>
+<header id="population"></header>
+
+<div id="emily">Emily Dickinson</div>
+<div id="boinc">
+    <iframe src="https://signature.statseb.fr/index.py?cpid=d03ca3319b7927dc86f01efb500567c8" ></iframe>
+</div>
+<div id="haiku">Haiku</div>
+
+<footer id="clock">
+    <em>Woot!</em> You found whatmadeyouhappytoday just in time, it is now <em id="time">Time</em>
+</footer>
+
+<script>
+
+  function getPoem(type,data) {
+    let text;
+    if(type !== 'emily'){
+      text = `<h2>Kobayashi Issa</h2><p>${Object.values(data[randomValue(data.length)]).join('<hr>')}</p>`;
+    } else {
+      const book = Object.keys(data)[randomValue(3)]
+      const chapter = Object.keys(data[book])[randomValue(4)]
+      const poem = Object.values(data[book][chapter])[randomValue(Object.values(data[book][chapter]).length)]
+      text = `<h2>Emily Poem</h2><h3>${book}<br><small>${chapter}</small></h3><p>${poem}</p>`
+    }
+    updateHTML(type,text)
+
+  }
+
+  function updateHTML(cell, text) {
+    document.getElementById(cell).innerHTML = text
+  }
+
+  async function worldPopulation() {
+
+    // Source from http://www.javascriptkit.com/script/script2/worldpop2.shtml
+    setTimeout(async function() {
+      const now = 5600000000;
+      const now2 = 5689466400;
+      const percent = (now2 - now) / now * 100;
+      const percent2 = (now * (percent / 100)) / 365 / 24 / 60 / 60;
+      const nu = new Date();
+      const start = new Date(96, 1, 1);
+      const total = Math.floor(
+          (nu.getTime() - start.getTime()) / 1000 * percent2 + now);
+      updateHTML('population', `<h2>Estimated World Population<br><small>${numberWithCommas(total)}</small></h2>`)
+      updateHTML('time',nu);
+      await worldPopulation();
+
+    }, 1000);
+  }
+
+  async function fetchFile(filename) {
+    return await fetch(`${filename}.json`).then(data => data.json()).then(data =>
+        getPoem(filename, data),
+    );
+  }
+
+  document.body.onload = async function() {
+    await worldPopulation();
+
+    // Source from https://raw.githubusercontent.com/azappa/haiku/master/haiku.json
+    await fetchFile('haiku');
+    await fetchFile('emily');
+
+
+
+  };
+
+  // Source from https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function randomValue(max, prev) {
+    let value = Math.floor(Math.random() * max);
+    return (value !== prev) ? value : randomValue(max, prev);
+  }
+
+</script>
+</body>
+</html>
